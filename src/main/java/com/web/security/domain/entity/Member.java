@@ -1,6 +1,7 @@
 package com.web.security.domain.entity;
 
 import com.web.security.domain.type.MemberRole;
+import com.web.security.endpoint.member.dto.RegisterRequest;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,10 +23,13 @@ public class Member {
 
     private String nickname;
 
-//    private MemberRole role;
-
-//    @Column(name = "enabled_yn")
-//    private boolean enabled;
+    public static Member from(RegisterRequest req, String encryptedPassword) {
+        return Member.builder()
+                .email(req.getEmail())
+                .password(encryptedPassword)
+                .nickname(req.getNickname())
+                .build();
+    }
 
 
 

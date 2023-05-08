@@ -7,7 +7,7 @@ public class EmailDuplicationException extends BusinessException{
 
     private final ErrorCode errorCode;
 
-    public EmailDuplicationException(String message) {
+    public EmailDuplicationException() {
         this(ErrorCode.EMAIL_DUPLICATION, ErrorCode.EMAIL_DUPLICATION.getMessage());
     }
 
