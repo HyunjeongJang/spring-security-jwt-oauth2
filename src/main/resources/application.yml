@@ -1,1 +1,24 @@
+spring:
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
 
+  datasource:
+    url: jdbc:mysql://localhost:3306/security
+    username: spring
+    password: Spring123!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  redis:
+    host: localhost
+    port: 6379
+
+  profiles:
+    include:
+      - security
+
+logging:
+  level:
+    root: INFO
