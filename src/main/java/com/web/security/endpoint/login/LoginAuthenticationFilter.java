@@ -35,7 +35,7 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authResult) throws IOException, ServletException {
         LoginAuthenticationToken afterToken = (LoginAuthenticationToken) authResult;
-        log.info("로그인 성공^^" + afterToken.getAcessToken());
+        log.info("로그인 성공^^" + afterToken.getAccessToken());
         super.successfulAuthentication(request, response, chain, authResult);
 
     }

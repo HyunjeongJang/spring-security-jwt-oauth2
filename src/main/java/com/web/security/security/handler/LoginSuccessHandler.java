@@ -21,7 +21,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth) throws IOException, ServletException {
         // access_token, refresh_token
         LoginAuthenticationToken afterToken = (LoginAuthenticationToken) auth;
-        String accessToken = afterToken.getAcessToken();
+        String accessToken = afterToken.getAccessToken();
         String refreshToken = afterToken.getRefreshToken();
 
         LoginResponse loginResponse = new LoginResponse(accessToken, refreshToken);

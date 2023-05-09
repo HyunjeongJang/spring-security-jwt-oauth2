@@ -37,7 +37,7 @@ public class LoginAuthenticationToken extends UsernamePasswordAuthenticationToke
         return (String) this.getCredentials();
     }
 
-    public String getAcessToken() {
+    public String getAccessToken() {
         return ((JwtDto) this.getPrincipal()).getAccessToken();
     }
 
