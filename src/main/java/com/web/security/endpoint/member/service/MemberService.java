@@ -7,6 +7,9 @@ import com.web.security.exception.EmailDuplicationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,14 +19,19 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public void register(RegisterRequest req) {
+    @Transactional
+    public void register(RegisterRequest request) {
         // 이미 존재하는 이메일인지 확인
-        if(memberRepository.existsByEmail(req.getEmail())) {
+        if(memberRepository.existsByEmail(request.getEmail())) {
             throw new EmailDuplicationException();
         }
 
-        String encryptedPassword = passwordEncoder.encode(req.getPassword());
-        Member member = Member.from(req, encryptedPassword);
+        String encryptedPassword = passwordEncoder.encode(request.getPassword());
+        Member member = Member.of(request, encryptedPassword);
         memberRepository.save(member);
+    }
+
+    public Optional<Member> find(String email) {
+        return memberRepository.findByEmail(email);
     }
 }

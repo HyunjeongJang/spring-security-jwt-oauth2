@@ -3,6 +3,7 @@ package com.web.security.domain.entity;
 import com.web.security.domain.type.MemberRole;
 import com.web.security.endpoint.member.dto.RegisterRequest;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
@@ -23,12 +24,20 @@ public class Member {
 
     private String nickname;
 
-    public static Member from(RegisterRequest req, String encryptedPassword) {
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
+
+    public static Member of(RegisterRequest request, String encryptedPassword) {
         return Member.builder()
-                .email(req.getEmail())
+                .email(request.getEmail())
                 .password(encryptedPassword)
-                .nickname(req.getNickname())
+                .nickname(request.getNickname())
+                .role(MemberRole.GENERAL)
                 .build();
+    }
+
+    public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
+        return passwordEncoder.matches(password, this.password);
     }
 
 
