@@ -18,7 +18,3 @@ spring:
   profiles:
     include:
       - security
-
-logging:
-  level:
-    root: INFO

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -35,11 +36,22 @@ public class JwtHelper {
                 .sign(Algorithm.HMAC512(secretKey)); // 시크릿 키를 전달
     }
 
-    public String generateRefreshToken(String username) {
+    public String generateRefreshToken(String subject) {
         return JWT.create()
-                .withSubject(username)
+                .withSubject(subject)
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))
                 .sign(Algorithm.HMAC512(secretKey));
+    }
+
+    public String extractSubject(String refreshToken) {
+        return JWT.decode(refreshToken)
+                .getSubject();
+    }
+
+    public long extractExpiredAt(String refreshToken) {
+        return JWT.decode(refreshToken)
+                .getExpiresAt()
+                .getTime();
     }
 }
