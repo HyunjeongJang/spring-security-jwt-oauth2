@@ -1,10 +1,13 @@
 package com.web.security.common.helper;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.web.security.domain.type.MemberRole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -44,14 +47,30 @@ public class JwtHelper {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public String extractSubject(String refreshToken) {
-        return JWT.decode(refreshToken)
+    public String extractSubject(String token) {
+        return JWT.decode(token)
                 .getSubject();
     }
 
-    public long extractExpiredAt(String refreshToken) {
-        return JWT.decode(refreshToken)
+    public long extractExpiredAt(String token) {
+        return JWT.decode(token)
                 .getExpiresAt()
                 .getTime();
+    }
+
+    public String extractRole(String token) {
+        return JWT.decode(token)
+                .getClaim("role")
+                .asString();
+    }
+
+    public boolean validate(String token) {
+        try {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
+            verifier.verify(token);
+        } catch (JWTVerificationException exception) {
+            return false;
+        }
+        return true;
     }
 }

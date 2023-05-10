@@ -18,8 +18,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> runtimeExceptionHandler(RuntimeException ex) {
-        log.error(ex.getMessage(), ex);
+    public ResponseEntity<ErrorResponse> runtimeExceptionHandler(RuntimeException exception) {
+        log.error(exception.getMessage(), exception);
         return ResponseEntity.internalServerError().body(ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 }
