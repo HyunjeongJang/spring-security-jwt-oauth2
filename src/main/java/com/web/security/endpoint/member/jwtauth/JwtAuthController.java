@@ -1,18 +1,24 @@
 package com.web.security.endpoint.member.jwtauth;
 
+import com.web.security.endpoint.member.jwtauth.dto.JwtAuthenticationToken;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/jwt/auth")
 public class JwtAuthController {
 
     @PostMapping("/access-token")
-    public ResponseEntity<Void> reIsuueAccessToken() {
+    public ResponseEntity<Void> reIsuueAccessToken(@AuthenticationPrincipal long memberId) {
+        log.info("로그인된 사용자 ID : " + memberId);
         return ResponseEntity.ok().build();
     }
 }

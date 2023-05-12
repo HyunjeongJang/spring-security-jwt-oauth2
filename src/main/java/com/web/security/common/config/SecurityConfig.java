@@ -1,6 +1,10 @@
 package com.web.security.common.config;
 
 import com.web.security.endpoint.login.LoginAuthenticationFilter;
+import com.web.security.endpoint.member.jwtauth.JwtAuthenticationFilter;
+import com.web.security.security.common.FilterSkipMatcher;
+import com.web.security.security.handler.AuthenticationFailureEntryPoint;
+import com.web.security.security.handler.JwtAuthenticationSuccessHandler;
 import com.web.security.security.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,14 +15,26 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    // 예외로 처리해줘야 할 것들 -> 토큰인증 없이 호출할 수 있어야 할 url 지정
+    private static final List<String> JWT_AUTH_WHITELIST_SWAGGER = List.of("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
+            "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**");
+
+    private static final List<String> JWT_AUTH_WHITELIST_DEFAULT = List.of("/member/register", "/error", "/login", "/oauth2/**");
+
     private final LoginSuccessHandler loginSuccessHandler;
+    private final JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
+    private final AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -26,12 +42,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public LoginAuthenticationFilter loginAuthenticationFilter() throws Exception {
-        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter("/login");
+        LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter("/login"); // 로그인 필터를 타는 대상
         loginAuthenticationFilter.setAuthenticationManager(super.authenticationManager());
         loginAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
+        loginAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationEntryPointFailureHandler(authenticationFailureEntryPoint));
         return loginAuthenticationFilter;
     }
 
+    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        List<String> skipPaths = new ArrayList<>();
+        skipPaths.addAll(JWT_AUTH_WHITELIST_SWAGGER);
+        skipPaths.addAll(JWT_AUTH_WHITELIST_DEFAULT);
+        FilterSkipMatcher matcher = new FilterSkipMatcher(skipPaths);
+
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(matcher); // url 이 하나가 아니까 떄문에 requset matcher 를 통해 지정
+        jwtAuthenticationFilter.setAuthenticationManager(super.authenticationManager());
+        jwtAuthenticationFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler);
+        jwtAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationEntryPointFailureHandler(authenticationFailureEntryPoint));
+        return jwtAuthenticationFilter;
+    }
+
+    @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .httpBasic().disable() // HTTP 기반 인증
@@ -44,7 +75,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
-                .addFilterBefore(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling()
+
+                .and()
+                .addFilterBefore(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
 }

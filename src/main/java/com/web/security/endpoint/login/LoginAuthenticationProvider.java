@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LoginAuthenticationProvider implements AuthenticationProvider {
 
-    // 로그인을 처리하려면 DB가 필요
     private final MemberSecurityService memberSecurityService;
     private final JwtHelper jwtHelper;
     private final RefreshTokenRedisService refreshTokenRedisService;

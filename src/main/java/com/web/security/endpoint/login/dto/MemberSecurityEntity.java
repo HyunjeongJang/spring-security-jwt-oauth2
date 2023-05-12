@@ -16,6 +16,11 @@ public class MemberSecurityEntity implements UserDetails {
 
     private final List<MemberRole> roles;
 
+    public MemberSecurityEntity() {
+        this.memberId = 0;
+        this.roles = List.of();
+    }
+
     public MemberSecurityEntity(Member member) {
         this.memberId = member.getId();
         this.roles = List.of(member.getRole());

@@ -29,6 +29,6 @@ public class MemberSecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        return null;
+        return new MemberSecurityEntity();
     }
 }

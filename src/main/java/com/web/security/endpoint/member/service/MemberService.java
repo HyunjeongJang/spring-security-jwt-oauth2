@@ -4,6 +4,7 @@ import com.web.security.domain.entity.Member;
 import com.web.security.domain.repository.MemberRepository;
 import com.web.security.endpoint.member.dto.RegisterRequest;
 import com.web.security.exception.EmailDuplicationException;
+import com.web.security.exception.EmailNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public Optional<Member> find(String email) {
-        return memberRepository.findByEmail(email);
+    public Member find(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
     }
 }
