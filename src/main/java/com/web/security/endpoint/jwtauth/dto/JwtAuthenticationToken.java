@@ -1,4 +1,4 @@
-package com.web.security.endpoint.member.jwtauth.dto;
+package com.web.security.endpoint.jwtauth.dto;
 
 import com.web.security.domain.type.MemberRole;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

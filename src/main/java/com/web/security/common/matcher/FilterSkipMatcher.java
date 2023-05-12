@@ -1,4 +1,4 @@
-package com.web.security.security.common;
+package com.web.security.common.matcher;
 
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;

@@ -1,4 +1,4 @@
-package com.web.security.endpoint.login.dto;
+package com.web.security.security.entity;
 
 import com.web.security.domain.entity.Member;
 import com.web.security.domain.type.MemberRole;

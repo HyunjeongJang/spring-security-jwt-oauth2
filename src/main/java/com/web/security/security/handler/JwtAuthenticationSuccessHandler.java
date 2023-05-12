@@ -1,6 +1,7 @@
+/*
 package com.web.security.security.handler;
 
-import com.web.security.endpoint.member.jwtauth.dto.JwtAuthenticationToken;
+import com.web.security.endpoint.jwtauth.dto.JwtAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,9 +17,7 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    // 필터 체인이 들어있음. 로그인 석세스 핸들러에서는 파라미터 3개짜리 썼는데 여기선 4개짜리 사용
-    // 로그인은 끝났으면 사용자한테 가지만
-    // 이건 토큰 인증이 성공했으면 안으로 들어가야 하므로 체인에 dofilter 써서 다음으로 진행시켜줘야함
+    // LoginSuccessHandler 에선 끝났으면 사용자한테 가지만 이건 토큰 인증이 성공했으면 안으로 들어가야 하므로 체인에 doFilter 써서 다음으로 진행시켜줘야함
     // 종착지가 아니라 다음으로 진행시켜줘야 할 때
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
@@ -44,3 +43,4 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
     }
 }
+*/

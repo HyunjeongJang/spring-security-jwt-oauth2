@@ -2,22 +2,18 @@ package com.web.security.common.config;
 
 import com.web.security.endpoint.login.LoginAuthenticationFilter;
 import com.web.security.endpoint.login.LoginAuthenticationProvider;
-import com.web.security.endpoint.member.jwtauth.JwtAuthenticationFilter;
-import com.web.security.endpoint.member.jwtauth.JwtAuthenticationProvider;
-import com.web.security.security.common.FilterSkipMatcher;
+import com.web.security.endpoint.jwtauth.JwtAuthenticationFilter;
+import com.web.security.endpoint.jwtauth.JwtAuthenticationProvider;
+import com.web.security.common.matcher.FilterSkipMatcher;
 import com.web.security.security.handler.AuthenticationFailureEntryPoint;
-import com.web.security.security.handler.JwtAuthenticationSuccessHandler;
 import com.web.security.security.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 

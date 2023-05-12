@@ -1,8 +1,7 @@
-package com.web.security.endpoint.member.jwtauth;
+package com.web.security.endpoint.jwtauth;
 
-import com.web.security.core.NotFoundAccessTokenException;
-import com.web.security.endpoint.member.jwtauth.dto.JwtAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationManager;
+import com.web.security.security.exception.NotFoundAccessTokenException;
+import com.web.security.endpoint.jwtauth.dto.JwtAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -12,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PushbackInputStream;
 import java.util.Optional;
 
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {

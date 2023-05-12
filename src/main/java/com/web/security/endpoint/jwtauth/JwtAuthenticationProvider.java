@@ -1,17 +1,14 @@
-package com.web.security.endpoint.member.jwtauth;
+package com.web.security.endpoint.jwtauth;
 
 import com.web.security.common.helper.JwtHelper;
 import com.web.security.domain.type.MemberRole;
-import com.web.security.endpoint.member.jwtauth.dto.JwtAuthenticationToken;
-import com.web.security.exception.InvalidAccessTokenException;
+import com.web.security.endpoint.jwtauth.dto.JwtAuthenticationToken;
+import com.web.security.security.exception.InvalidAccessTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Component
 @RequiredArgsConstructor

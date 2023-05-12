@@ -3,13 +3,12 @@ package com.web.security.endpoint.login;
 import com.web.security.common.helper.JwtHelper;
 import com.web.security.domain.service.RefreshTokenRedisService;
 import com.web.security.endpoint.login.dto.LoginAuthenticationToken;
-import com.web.security.endpoint.login.dto.MemberSecurityEntity;
-import com.web.security.endpoint.login.service.MemberSecurityService;
+import com.web.security.security.entity.MemberSecurityEntity;
+import com.web.security.security.service.MemberSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
