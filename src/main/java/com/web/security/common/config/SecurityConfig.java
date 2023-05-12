@@ -1,7 +1,9 @@
 package com.web.security.common.config;
 
 import com.web.security.endpoint.login.LoginAuthenticationFilter;
+import com.web.security.endpoint.login.LoginAuthenticationProvider;
 import com.web.security.endpoint.member.jwtauth.JwtAuthenticationFilter;
+import com.web.security.endpoint.member.jwtauth.JwtAuthenticationProvider;
 import com.web.security.security.common.FilterSkipMatcher;
 import com.web.security.security.handler.AuthenticationFailureEntryPoint;
 import com.web.security.security.handler.JwtAuthenticationSuccessHandler;
@@ -9,6 +11,7 @@ import com.web.security.security.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -33,13 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final List<String> JWT_AUTH_WHITELIST_DEFAULT = List.of("/member/register", "/error", "/login", "/oauth2/**");
 
     private final LoginSuccessHandler loginSuccessHandler;
-    private final JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
     private final AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    private final LoginAuthenticationProvider loginAuthenticationProvider;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     public LoginAuthenticationFilter loginAuthenticationFilter() throws Exception {
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter("/login"); // 로그인 필터를 타는 대상
@@ -55,11 +54,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         skipPaths.addAll(JWT_AUTH_WHITELIST_DEFAULT);
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPaths);
 
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(matcher); // url 이 하나가 아니까 떄문에 requset matcher 를 통해 지정
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(matcher); // url 이 하나가 아니까 떄문에 request matcher 를 통해 지정
         jwtAuthenticationFilter.setAuthenticationManager(super.authenticationManager());
-        jwtAuthenticationFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler);
         jwtAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationEntryPointFailureHandler(authenticationFailureEntryPoint));
         return jwtAuthenticationFilter;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(loginAuthenticationProvider);
+        auth.authenticationProvider(jwtAuthenticationProvider);
     }
 
     @Override
