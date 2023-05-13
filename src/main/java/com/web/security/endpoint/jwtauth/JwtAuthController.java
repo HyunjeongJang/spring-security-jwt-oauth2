@@ -25,3 +25,7 @@ public class JwtAuthController {
 // 다른 요청이 올 때 AccessToken 이 잘 포함되어 있는지 확인해서
 // 다른 요청이 올 떄 거칠 Filter (JwtAccessToken 인증을 하기 위한 필터)가 추가돼야함
 
+// TODO: RefreshToken 을 이용해서 AccessToken 재발급
+// TODO: OAuth 로그인 구현
+// TODO: 권한별 API 인가 (@PreAuthorize(value="ADMIN")
+// TODO: 로그아웃, 탈퇴

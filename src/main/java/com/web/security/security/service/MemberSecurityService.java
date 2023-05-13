@@ -17,18 +17,10 @@ public class MemberSecurityService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
-    public UserDetails validate(String email, String password) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
-        if(!member.validatePassword(passwordEncoder, password)) {
-            throw new InvalidPasswordException();
-        }
-        return new MemberSecurityEntity(member);
-    }
-
     @Override
     public UserDetails loadUserByUsername(String email) {
-        return new MemberSecurityEntity();
+        return memberRepository.findByEmail(email)
+                .map(MemberSecurityEntity::new)
+                .orElseThrow(EmailNotFoundException::new);
     }
 }
