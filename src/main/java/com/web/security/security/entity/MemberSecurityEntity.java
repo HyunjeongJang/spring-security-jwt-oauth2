@@ -15,9 +15,7 @@ import java.util.List;
 public class MemberSecurityEntity implements UserDetails {
 
     private final long memberId;
-
     private final String password;
-
     private final List<MemberRole> roles;
 
     public MemberSecurityEntity(Member member) {

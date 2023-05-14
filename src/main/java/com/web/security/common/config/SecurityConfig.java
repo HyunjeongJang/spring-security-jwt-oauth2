@@ -5,8 +5,10 @@ import com.web.security.endpoint.login.LoginAuthenticationProvider;
 import com.web.security.endpoint.jwtauth.JwtAuthenticationFilter;
 import com.web.security.endpoint.jwtauth.JwtAuthenticationProvider;
 import com.web.security.common.matcher.FilterSkipMatcher;
+import com.web.security.endpoint.oauth2.service.MyOauth2UserService;
 import com.web.security.security.handler.AuthenticationFailureEntryPoint;
 import com.web.security.security.handler.LoginSuccessHandler;
+import com.web.security.security.handler.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -32,9 +34,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final List<String> JWT_AUTH_WHITELIST_DEFAULT = List.of("/member/register", "/error", "/login", "/oauth2/**");
 
     private final LoginSuccessHandler loginSuccessHandler;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
     private final LoginAuthenticationProvider loginAuthenticationProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final MyOauth2UserService oAuth2UserService;
 
     public LoginAuthenticationFilter loginAuthenticationFilter() throws Exception {
         LoginAuthenticationFilter loginAuthenticationFilter = new LoginAuthenticationFilter("/login"); // 로그인 필터를 타는 대상
@@ -79,7 +83,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .addFilterBefore(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+
+                .oauth2Login()
+                .redirectionEndpoint().baseUri("/oauth2/login/callback/*")
+                .and().userInfoEndpoint().userService(oAuth2UserService) // kakao 쪽 api 호출하는건 oauthClient 스프링 시큐리티 라이브러리를 이용
+                .and().successHandler(oAuth2LoginSuccessHandler); // 성공시
     }
 
 }

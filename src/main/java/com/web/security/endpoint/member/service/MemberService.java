@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -30,7 +32,17 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public Member find(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
-    }
+//    public Member find(String email) {
+//        return memberRepository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
+//    }
+
+//    public boolean existsByEmail(String email) {
+//        return memberRepository.existsByEmail(email);
+//    }
+
+//    public MemberResponse retrieve(String email) {
+//        return memberRepository.findByEmail(email)
+//                .map(MemberResponse::from)
+//                .orElseThrow(() -> new EntityNotFoundException("해당 이메일을 가진 사용자를 찾을 수 없습니다."));
+//    }
 }
