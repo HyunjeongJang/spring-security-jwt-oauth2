@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,4 +19,7 @@ public class RefreshTokenRedisRepository {
         redisTemplate.opsForValue().set(KEY_PREFIX + key, value, timeout);
     }
 
+    public Optional<String> find(String key) {
+        return Optional.ofNullable(redisTemplate.opsForValue().get(KEY_PREFIX + key));
+    }
 }
