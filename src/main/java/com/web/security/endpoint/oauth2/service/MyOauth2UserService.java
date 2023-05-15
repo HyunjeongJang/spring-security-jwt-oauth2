@@ -42,13 +42,14 @@ public class MyOauth2UserService implements OAuth2UserService<OAuth2UserRequest,
             memberService.register(RegisterRequest.from(oAuth2Account));
         }
         // 이미 가입 되어있으면 가입된 사용자 정보 조회 (OAuth2Account 에 Member 를 채워서 저장)
-        Member member = memberRepository.findByEmail(oAuth2Account.getEmail())
-                .orElseThrow(() -> new EntityNotFoundException("해당 이메일을 가진 사용자를 찾을 수 없습니다."));
+        Member member = memberRepository.getByEmail(oAuth2Account.getEmail());
         oAuth2Account.setMember(member);
-        OAuth2Account savesAccount = oAuth2AccountRepository.save(oAuth2Account);
+        if (!oAuth2AccountRepository.existsByProviderNameAndAccountId(oAuth2Account.getProviderName(), oAuth2Account.getAccountId())) {
+            oAuth2AccountRepository.save(oAuth2Account);
+        }
 
         // 4. OAuth2User 반환
         // -> Authentication 객체의 Principal 필드로 저장돼서 SuccessHandler 로 감
-        return new MyOAuth2User(savesAccount);
+        return new MyOAuth2User(oAuth2Account);
     }
 }

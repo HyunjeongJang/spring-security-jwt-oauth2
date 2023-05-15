@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailDuplicationException.class)
-    public ResponseEntity<ErrorResponse> emailDuplicationExceptionHandler(EmailDuplicationException ex) {
-        log.error(ex.getMessage(), ex);
-        ErrorResponse resp = ErrorResponse.from(ex.getErrorCode());
+    public ResponseEntity<ErrorResponse> emailDuplicationExceptionHandler(EmailDuplicationException exception) {
+        log.error(exception.getMessage(), exception);
+        ErrorResponse resp = ErrorResponse.from(exception.getErrorCode());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(resp);
     }
 

@@ -33,10 +33,10 @@ public class OAuth2Account {
     private Member member;
 
     @Transient // 컬럼으로 인식하지 않고 단순 데이터를 담기위한 목적
-    private String nickname;
-    @Transient
     private String email;
 
+    @Transient
+    private String nickname;
 
     public static OAuth2Account of(OAuth2UserRequest request, OAuth2User user) {
         String registrationId = request.getClientRegistration().getRegistrationId(); // kakao (yml - registration 부분)

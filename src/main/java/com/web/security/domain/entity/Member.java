@@ -27,12 +27,16 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
-    public static Member of(RegisterRequest request, String encryptedPassword) {
+    @Column(name = "enabled_yn")
+    private boolean enabled;
+
+    public static Member of(RegisterRequest request) {
         return Member.builder()
                 .email(request.getEmail())
-                .password(encryptedPassword)
+                .password(request.getPassword())
                 .nickname(request.getNickname())
                 .role(MemberRole.GENERAL)
+                .enabled(!request.getPassword().isBlank())
                 .build();
     }
 

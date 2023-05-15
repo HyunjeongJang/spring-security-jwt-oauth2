@@ -26,9 +26,13 @@ public class MemberService {
         if(memberRepository.existsByEmail(request.getEmail())) {
             throw new EmailDuplicationException();
         }
+        if(!request.getPassword().isBlank()) {
+            request.encryptPassword(passwordEncoder);
+        }
 
-        String encryptedPassword = passwordEncoder.encode(request.getPassword());
-        Member member = Member.of(request, encryptedPassword);
+//        String encryptedPassword = passwordEncoder.encode(request.getPassword());
+//        Member member = Member.of(request, encryptedPassword);
+        Member member = Member.of(request);
         memberRepository.save(member);
     }
 
