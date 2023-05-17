@@ -22,4 +22,8 @@ public class RefreshTokenRedisRepository {
     public Optional<String> find(String key) {
         return Optional.ofNullable(redisTemplate.opsForValue().get(KEY_PREFIX + key));
     }
+
+    public void delete(String key) {
+        redisTemplate.opsForValue().getAndDelete(KEY_PREFIX + key);
+    }
 }

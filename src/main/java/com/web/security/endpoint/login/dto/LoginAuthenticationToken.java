@@ -12,6 +12,7 @@ import java.util.List;
 
 // 인증객체는 인증되기 전, 인증된 후 두 가지 상태를 가짐
 public class LoginAuthenticationToken extends UsernamePasswordAuthenticationToken {
+
     public LoginAuthenticationToken(Object principal, Object credentials) {
         super(principal, credentials);
     }
@@ -20,8 +21,8 @@ public class LoginAuthenticationToken extends UsernamePasswordAuthenticationToke
         super(principal, credentials, authorities);
     }
 
-    public static LoginAuthenticationToken beforeOf(LoginRequest request) {
-        return new LoginAuthenticationToken(request.getEmail(), request.getPassword());
+    public static LoginAuthenticationToken beforeOf(LoginRequest req) {
+        return new LoginAuthenticationToken(req.getEmail(), req.getPassword());
     }
 
     public static Authentication afterOf(String accessToken, String refreshToken) {

@@ -31,12 +31,12 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
         return super.getAuthenticationManager().authenticate(beforeToken);
     }
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        LoginAuthenticationToken afterToken = (LoginAuthenticationToken) authResult;
-        log.info("로그인 성공^^ AccessToken : " + afterToken.getAccessToken());
-        super.successfulAuthentication(request, response, chain, authResult);
-    }
+//    @Override
+//    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+//                                            FilterChain chain, Authentication authResult) throws IOException, ServletException {
+//        LoginAuthenticationToken afterToken = (LoginAuthenticationToken) authResult;
+//        log.info("로그인 성공^^ AccessToken : " + afterToken.getAccessToken());
+//        super.successfulAuthentication(request, response, chain, authResult);
+//    }
 }
 

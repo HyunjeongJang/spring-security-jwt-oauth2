@@ -41,12 +41,5 @@ public class JwtAuthController {
         System.out.println("로그인한 사용자 : " + memberId);
         return ResponseEntity.ok().build();
     }
-
 }
 
-// 로그인 성공시 -> AccessToken, RefreshToken 을 반환 했고,
-// 다른 요청이 올 때 AccessToken 이 잘 포함되어 있는지 확인해서
-// 다른 요청이 올 때 거칠 Filter (JwtAccessToken 인증을 하기 위한 필터)가 추가돼야함
-
-// TODO: 권한별 API 인가 (@PreAuthorize(value="ADMIN")
-// TODO: 로그아웃, 탈퇴

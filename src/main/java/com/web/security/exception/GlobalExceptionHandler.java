@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailDuplicationException.class)
-    public ResponseEntity<ErrorResponse> emailDuplicationExceptionHandler(EmailDuplicationException exception) {
-        log.error(exception.getMessage(), exception);
-        ErrorResponse resp = ErrorResponse.from(exception.getErrorCode());
+    public ResponseEntity<ErrorResponse> emailDuplicationExceptionHandler(EmailDuplicationException ex) {
+        log.error(ex.getMessage(), ex);
+        ErrorResponse resp = ErrorResponse.from(ex.getErrorCode());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(resp);
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> runtimeExceptionHandler(RuntimeException exception) {
-        log.error(exception.getMessage(), exception);
+    public ResponseEntity<ErrorResponse> runtimeExceptionHandler(RuntimeException ex) {
+        log.error(ex.getMessage(), ex);
         return ResponseEntity.internalServerError().body(ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 }

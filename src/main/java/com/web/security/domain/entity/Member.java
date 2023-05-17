@@ -3,6 +3,7 @@ package com.web.security.domain.entity;
 import com.web.security.domain.type.MemberRole;
 import com.web.security.endpoint.member.dto.RegisterRequest;
 import lombok.*;
+import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Member {
+public class Member extends AbstractAggregateRoot {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")

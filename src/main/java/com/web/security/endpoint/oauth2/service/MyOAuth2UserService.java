@@ -16,11 +16,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
-
 @Service
 @RequiredArgsConstructor
-public class MyOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public class MyOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final MemberRepository memberRepository;
     private final MemberService memberService;

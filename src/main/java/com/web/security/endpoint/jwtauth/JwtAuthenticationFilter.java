@@ -18,7 +18,7 @@ import java.util.Optional;
 
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer";
+    private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
 
     public JwtAuthenticationFilter(RequestMatcher requestMatcher) {
         super(requestMatcher);
@@ -41,8 +41,8 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     // jwt url 을 거쳐야 하는 url 은 무수히 많기 때문에 requestMatcher 라는걸 통해서 해당 요청이 필터를 타야하는지 안타야 하는지 검증해줌
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
         JwtAuthenticationToken afterOf = (JwtAuthenticationToken) authResult;
 
         // SecurityContext 는 인증 객체가 저장되어 있는 공간

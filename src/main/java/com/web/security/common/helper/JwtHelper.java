@@ -4,22 +4,15 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.web.security.domain.type.MemberRole;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class JwtHelper {
 
     private static final int ACCESS_TOKEN_VALIDITY = 30 * 60 * 1000;
-
     private static final int REFRESH_TOKEN_VALIDITY = 24 * 60 * 60 * 1000;
 
     // 시크릿 키는 VERIFY SIGNATURE 를 암호화 하기 위해 쓰임
@@ -68,7 +61,7 @@ public class JwtHelper {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
             verifier.verify(token);
-        } catch (JWTVerificationException exception) {
+        } catch (JWTVerificationException ex) {
             return false;
         }
         return true;

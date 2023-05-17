@@ -22,10 +22,8 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
     private final MemberSecurityService memberSecurityService;
     private final JwtHelper jwtHelper;
     private final RefreshTokenRedisService refreshTokenRedisService;
-
     private final PasswordEncoder passwordEncoder;
 
-    // TODO: Redis 관련작업
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
