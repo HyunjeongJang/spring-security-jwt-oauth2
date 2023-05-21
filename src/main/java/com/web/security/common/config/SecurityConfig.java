@@ -1,31 +1,38 @@
 package com.web.security.common.config;
 
-import com.web.security.endpoint.login.LoginAuthenticationFilter;
-import com.web.security.endpoint.login.LoginAuthenticationProvider;
-import com.web.security.endpoint.jwtauth.JwtAuthenticationFilter;
-import com.web.security.endpoint.jwtauth.JwtAuthenticationProvider;
-import com.web.security.common.matcher.FilterSkipMatcher;
-import com.web.security.endpoint.oauth2.service.MyOAuth2UserService;
-import com.web.security.security.handler.AuthenticationFailureEntryPoint;
-import com.web.security.security.handler.LoginSuccessHandler;
-import com.web.security.security.handler.OAuth2LoginSuccessHandler;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.web.security.common.matcher.FilterSkipMatcher;
+import com.web.security.endpoint.jwtauth.JwtAuthenticationFilter;
+import com.web.security.endpoint.jwtauth.JwtAuthenticationProvider;
+import com.web.security.endpoint.login.LoginAuthenticationFilter;
+import com.web.security.endpoint.login.LoginAuthenticationProvider;
+import com.web.security.endpoint.oauth2.service.MyOAuth2UserService;
+import com.web.security.security.handler.AuthenticationFailureEntryPoint;
+import com.web.security.security.handler.CustomAccessDeniedHandler;
+import com.web.security.security.handler.LoginSuccessHandler;
+import com.web.security.security.handler.OAuth2LoginSuccessHandler;
+
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
     // 예외로 처리해줘야 할 것들 -> 토큰인증 없이 호출할 수 있어야 할 url 지정
     private static final List<String> JWT_AUTH_WHITELIST_SWAGGER = List.of("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
@@ -36,38 +43,56 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final LoginSuccessHandler loginSuccessHandler;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
     private final LoginAuthenticationProvider loginAuthenticationProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
-    public LoginAuthenticationFilter loginAuthenticationFilter() throws Exception {
+    // Spring 에 Interceptor, Filter 를 등록할 때도 다 동일함
+    // Interceptor, Filter 는 AOP 방식의 프로그래밍을할 때 쓸 수 있도록 Spring 에서 만들어준 도구
+    // 제약사항 : Interceptor, Filter 는 HTTP Request 에 대해서만 AOP 를 구현할 수 있음
+    // 항상 요청은 인터셉터와 필터를 거쳐갈 수 있는 가능성이 있음 (따라서 경로를 설정해야)
+    public LoginAuthenticationFilter loginAuthenticationFilter(AuthenticationManager authenticationManager) throws Exception {
+        // 로그인 필터 같은 경우는 /login 만 가능하도록 설정 이 경로로 왔을때만 필터를 타도록
         LoginAuthenticationFilter loginFilter = new LoginAuthenticationFilter("/login");
-        loginFilter.setAuthenticationManager(super.authenticationManager());
+        loginFilter.setAuthenticationManager(authenticationManager);
         loginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
         loginFilter.setAuthenticationFailureHandler(new AuthenticationEntryPointFailureHandler(authenticationFailureEntryPoint));
         return loginFilter;
     }
 
-    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+    // 생성자가 들어가야 하는데 로그인 같은 경우에는 경로가 하나니까 String 으로 받았는데
+    // jwt url 을 거쳐야 하는 url 은 무수히 많기 때문에 requestMatcher 라는걸 통해서 해당 요청이 필터를 타야하는지 안타야 하는지 검증해줌
+    public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationManager authenticationManager) throws Exception {
         List<String> skipPaths = new ArrayList<>();
         skipPaths.addAll(JWT_AUTH_WHITELIST_SWAGGER);
         skipPaths.addAll(JWT_AUTH_WHITELIST_DEFAULT);
         FilterSkipMatcher matcher = new FilterSkipMatcher(skipPaths);
 
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(matcher);
-        jwtAuthenticationFilter.setAuthenticationManager(super.authenticationManager());
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(matcher); // 이 필터를 스킵해는 경로들을 넣어줌
+        jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
         jwtAuthenticationFilter.setAuthenticationFailureHandler(new AuthenticationEntryPointFailureHandler(authenticationFailureEntryPoint));
         return jwtAuthenticationFilter;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(loginAuthenticationProvider);
-        auth.authenticationProvider(jwtAuthenticationProvider);
+    @Bean
+    public AuthenticationManager configureAuthenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(loginAuthenticationProvider);
+        authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider);
+        return authenticationManagerBuilder.build();
     }
 
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
+    // 필터에서 인증 전 객체를 만들 때 인증할 수 있는 프로바이더한테 인증 해줘 라고 할때 authenticationManager 한테 요청하는데
+    // 매니저는 프로바이더들에 대한 정보를 가지고 있어야 하므로 프로바이더 정보를 등록해 줌 // 없어도 됨
+//    @Bean
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.authenticationProvider(loginAuthenticationProvider);
+//        auth.authenticationProvider(jwtAuthenticationProvider);
+//    }
+
+    @Bean
+    public SecurityFilterChain configure(AuthenticationManager authenticationManager, HttpSecurity http) throws Exception {
+        http
                 .httpBasic().disable() // HTTP 기반 인증
                 .formLogin().disable()
                 .cors().disable() // CORS -> Origin 문제
@@ -75,38 +100,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable()
 
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Jwt token 으로 인증하므로 STATELESS
 
                 .and()
                 .exceptionHandling()
+                // .accessDeniedHandler(accessDeniedHandler)
 
                 .and()
-                .addFilterBefore(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(loginAuthenticationFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
 
                 .oauth2Login()
                 .redirectionEndpoint().baseUri("/oauth2/login/callback/*")
                 .and().userInfoEndpoint().userService(oAuth2UserService) // kakao 쪽 api 호출하는건 oauthClient 스프링 시큐리티 라이브러리를 이용
                 .and().successHandler(oAuth2LoginSuccessHandler); // 성공시
-    }
 
+        return http.build();
+    }
 }
 
-// 로그인 -> AccessToken A & RefreshToken A 를 발급해서 내려줌
-// 		   RefreshToken A 는 Redis 의 REFRESH_TOKEN:1 이라는 곳에 저장
-// 로그아웃 -> REFRESH_TOKEN:1 에 저장된 RefreshToken A 를 지움 (RefreshToken A 로 언제든지 AccessToken N 을 새롭게 발급할 수 있으니까)
-//          AccessToken A 를 BLACK_LIST 에 등록.
-//          Client 가 가지고 있는 AccessToken A 로는 토큰인증을 통과할 수 없음
-// 그리고 다시 로그인 -> AccessToken B & RefreshToken B 를 발급해서 내려줌
-//                  AccessToken B 는 블랙리스트에 등록되어있지 않기 때문에 토큰인증을 통과할 수 있음
-
-// 회원탈퇴 -> OAuth 는 기본 서비스랑 관련이 x
-//    Member 테이블만 지워주면 탈퇴는 된거지만 카카오쪽에 연동이력이 남아있고, 재가입시에 약관이 뜨지 않음
-//    -> AccessToken (카카오에서 만들어준 AccessToken) 이 필요함.
-//    -> 저장 or 사용자가 다시 로그인 해야함
-//    -> 카카오 로그인을 통해 회원가입을 했어도 일반 로그인으로 이용이 가능한데
-//    -> 저장을 하면 생기는 문제
-//        -> 탈퇴는 언제할지 모르고 영영 안할수도 있는데
-//        -> AccessToken, RefreshToken 을 저장할 수는 있으나 만료기간이 있음
-//        -> 엄청 나중에 회원탈퇴를 시도하면 AccessToken, RefreshToken 모두 만료된 상태일 것 -> 연결끊기 실패
-//        -> 주기적으로 백그라운드에서 돌면서 RefreshToken 이 만료되기 전에 계속 AccessToken, RefreshToken 을 재발급 해야하는데 오버엔지니어링 같음

@@ -51,3 +51,6 @@ public class MyOAuth2UserService implements OAuth2UserService<OAuth2UserRequest,
         return new MyOAuth2User(oAuth2Account);
     }
 }
+
+// Client <--------> Server <------------> KAKAO
+//   (JWT 토큰 인증방식) (JWT 토큰 인증방식)

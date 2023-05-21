@@ -22,7 +22,7 @@ public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
         log.warn("사용자 인증 실패", authException);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         // try - resources
@@ -32,3 +32,5 @@ public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint
         }
     }
 }
+// AuthenticationException authException 여기에 NotFoundJwtAccessToken~~ 객체가 옴 업캐스팅 됨(부모클래스)
+

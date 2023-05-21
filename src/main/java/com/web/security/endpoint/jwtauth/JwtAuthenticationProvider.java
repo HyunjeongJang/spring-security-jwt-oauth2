@@ -3,7 +3,7 @@ package com.web.security.endpoint.jwtauth;
 import com.web.security.common.helper.JwtHelper;
 import com.web.security.domain.repository.BlackListRedisRepository;
 import com.web.security.domain.type.MemberRole;
-import com.web.security.endpoint.jwtauth.dto.JwtAuthenticationToken;
+import com.web.security.endpoint.jwtauth.dto.JwtAuthentication;
 import com.web.security.security.exception.BlackListedAccessTokenException;
 import com.web.security.security.exception.InvalidAccessTokenException;
 import lombok.RequiredArgsConstructor;
@@ -21,33 +21,32 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         // 인증 객체의 본모습-> JwtAuthenticationToken(업캐스팅 된 상태)
-        JwtAuthenticationToken beforeToken = (JwtAuthenticationToken) authentication; // 인증 전 객체
+        JwtAuthentication before = (JwtAuthentication) authentication; // 인증 전 객체
 //        String accessToken = (String) beforeToken.getPrincipal();
-        String accessToken = beforeToken.getAccessToken();
 
+        // accessToken 이 올바른지 검증
+        String accessToken = before.getAccessToken();
+
+        // 블랙리스트 확인
         if (blackListRedisRepository.exists(accessToken)) {
-            throw new BlackListedAccessTokenException();
+            throw new BlackListedAccessTokenException(); // 부모로 AuthenticationException 을 가지고 있음(그래야 스프링 시큐리티에서 지원하는 방식으로 에러처리 가능)
         }
-        
         // 형식이 올바른지 내가 만든 토큰이 맞는지 검증
-        try {
-            if (!jwtHelper.validate(accessToken)) { // 검증 실패
-                throw new InvalidAccessTokenException();
-            }
-            // accessToken -> memberId(subject) role(role Claim)
-            long memberId = Long.parseLong(jwtHelper.extractSubject(accessToken));
-            MemberRole role = MemberRole.valueOf(jwtHelper.extractRole(accessToken));
-            // 인증 후 객체 만들기
-            return JwtAuthenticationToken.afterOf(memberId, role);
-        } catch (RuntimeException ex) { // 예기치 못한 에러, 에러의 전환일 때, 전환하기 전에 발생한 에러의 정보를 남기고 싶을때 중첩 시키고 싶을때 -> cause
-            // 에러의 전환
-            throw new InvalidAccessTokenException(ex);
+        if (!jwtHelper.validate(accessToken)) { // 검증 실패
+            throw new InvalidAccessTokenException(); // 실패하면 에러 발생
         }
+
+        // 인증 성공했으면 인증 후 객체를 내려야 함
+        // accessToken -> memberId(subject) role(role Claim)
+        long memberId = Long.parseLong(jwtHelper.extractSubject(accessToken));
+        MemberRole role = MemberRole.valueOf(jwtHelper.extractRole(accessToken));
+        // 인증 후 객체 만들기 -> 인증 성공한 사용자 정보를 어딘가에 넣어둘것 이 필요하므로. 로그인 한 사용자가 누군지 알 필요가 있으니까 사용자 정보가 들어있음
+        return JwtAuthentication.afterOf(memberId, role); // return 하면 successfulHandler 로 이동 (JwtAuthenticationFilter - successfulAuthentication)
     }
 
     @Override
     public boolean supports(Class<?> authentication) { // Provider 가 처리할 수 있는 인증객체를 지정해주는 역할
-        return JwtAuthenticationToken.class.isAssignableFrom(authentication);
+        return JwtAuthentication.class.isAssignableFrom(authentication);
     }
 }
 

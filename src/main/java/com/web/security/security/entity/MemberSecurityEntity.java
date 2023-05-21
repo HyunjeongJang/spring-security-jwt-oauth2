@@ -67,7 +67,7 @@ public class MemberSecurityEntity implements UserDetails {
     }
 
     public void validatePassword(PasswordEncoder passwordEncoder, String password) {
-        if(!passwordEncoder.matches(password, this.password)) {
+        if (!passwordEncoder.matches(password, this.password)) {
             throw new InvalidPasswordException();
         }
     }

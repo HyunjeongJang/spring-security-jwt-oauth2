@@ -2,7 +2,7 @@ package com.web.security.endpoint.login.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.support.PageableExecutionUtils;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,23 +11,23 @@ import java.util.Collection;
 import java.util.List;
 
 // 인증객체는 인증되기 전, 인증된 후 두 가지 상태를 가짐
-public class LoginAuthenticationToken extends UsernamePasswordAuthenticationToken {
+public class LoginAuthentication extends UsernamePasswordAuthenticationToken {
 
-    public LoginAuthenticationToken(Object principal, Object credentials) {
+    public LoginAuthentication(Object principal, Object credentials) {
         super(principal, credentials);
     }
 
-    public LoginAuthenticationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+    public LoginAuthentication(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
         super(principal, credentials, authorities);
     }
 
-    public static LoginAuthenticationToken beforeOf(LoginRequest req) {
-        return new LoginAuthenticationToken(req.getEmail(), req.getPassword());
+    public static LoginAuthentication beforeOf(LoginRequest req) {
+        return new LoginAuthentication(req.getEmail(), req.getPassword());
     }
 
     public static Authentication afterOf(String accessToken, String refreshToken) {
         JwtDto jwtDto = new JwtDto(accessToken, refreshToken);
-        return new LoginAuthenticationToken(jwtDto, "", List.of());
+        return new LoginAuthentication(jwtDto, "", List.of());
     }
 
     public String getEmail() {

@@ -1,15 +1,15 @@
 package com.web.security.endpoint.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.web.security.endpoint.login.dto.LoginAuthenticationToken;
+import com.web.security.endpoint.login.dto.LoginAuthentication;
 import com.web.security.endpoint.login.dto.LoginRequest;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,14 +22,29 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
         super(defaultFilterProcessesUrl);
     }
 
+    // 사용자가 HTTP(프로토콜) Request(정해진 포맷이 있음) 를 보내는것
+    // 사용자가 요청을 보냈다 -> 요청에 대한 모든 데이터는 HttpServletRequest request 객체 안에 들어있음.
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
-        // Login 요청이니까 email, password 가 request 의 Body 안에 들어있음
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+             throws AuthenticationException, IOException {
+        // Login 요청이니까 email, password 가 request 의 Body 안에 들어있다고 가정(보통 password 는 RequestBody 에 넣)
+        // ObjectMapper (Jackson) : JSON > 객체 or 객체 > JSON (Mapping)
         LoginRequest loginRequest = new ObjectMapper().readValue(request.getReader(), LoginRequest.class);
+        // getReader() 리퀘스트 바디에서 꺼내는 과정 / 데이터가 바이트 배열로 넘어옴 -> 객체가 필요하니까 ObjectMapper 로 객체로 바꾸는 과정
         // Authentication 객체 (인증 전 객체)
-        LoginAuthenticationToken beforeToken = LoginAuthenticationToken.beforeOf(loginRequest);
-        return super.getAuthenticationManager().authenticate(beforeToken);
+        LoginAuthentication before = LoginAuthentication.beforeOf(loginRequest);
+        // loginRequest 객체는 POJO 형태인데 spring security 에 의존적인 Authentication 객체가 필요하므로 LoginAuthentication 에서 해당 형태로 만들어줌
+
+        //사용자가 준 정보로 인증 전 객체를 만들었고 그 객체를 인증할 수 있는 프로바이더에게 인증요청을 보내야 함 (AuthenticationManager 에게 부탁)
+
+//        AuthenticationManager authenticationManager = super.getAuthenticationManager();
+        return super.getAuthenticationManager().authenticate(before);
     }
+
+    // 인증에 성공하면 다시 필터로 돌아오고
+    // successfulHandler 주는 방법
+    // 1) 필터 안에서 오버라이딩 해서 구현
+    // 2) 별도 클래스 만들어서 객체 자체에 등록 (SecurityConfig loginAuthenticationFilter() setAuthenticationSucessHandler 에 등록돼있음
 
 //    @Override
 //    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,

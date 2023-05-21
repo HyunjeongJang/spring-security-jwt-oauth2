@@ -3,7 +3,6 @@ package com.web.security.security.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.security.common.helper.JwtHelper;
 import com.web.security.domain.service.RefreshTokenRedisService;
-import com.web.security.endpoint.login.dto.LoginAuthenticationToken;
 import com.web.security.endpoint.login.dto.LoginResponse;
 import com.web.security.endpoint.oauth2.dto.MyOAuth2User;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
