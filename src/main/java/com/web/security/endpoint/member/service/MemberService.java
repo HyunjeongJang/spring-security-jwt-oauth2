@@ -5,6 +5,7 @@ import com.web.security.domain.repository.BlackListRedisRepository;
 import com.web.security.domain.repository.MemberRepository;
 import com.web.security.domain.repository.OAuth2AccountRepository;
 import com.web.security.domain.repository.RefreshTokenRedisRepository;
+import com.web.security.endpoint.member.dto.AdditionalInfoRequest;
 import com.web.security.endpoint.member.dto.RegisterRequest;
 import com.web.security.exception.EmailDuplicationException;
 import com.web.security.security.exception.EmailNotFoundException;
@@ -37,6 +38,17 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    // Cookie 에 저장하는 방법
+    // Memory 에 저장하는 방법 (Redux)
+
+    @Transactional
+    public void registerAdditionalInfo(long memberId, AdditionalInfoRequest request) {
+        Member member = memberRepository.findById(memberId).orElseThrow();
+        request.encryptPassword(passwordEncoder);
+        member.changeAdditionalInfo(request);
+        memberRepository.save(member);
+    }
+
     @Transactional
     public void logout(long memberId, String accessToken) {
         blackListRedisRepository.set(accessToken);
@@ -49,4 +61,5 @@ public class MemberService {
         oAuth2AccountRepository.deleteAllByMemberId(memberId);
         memberRepository.deleteById(memberId);
     }
+
 }

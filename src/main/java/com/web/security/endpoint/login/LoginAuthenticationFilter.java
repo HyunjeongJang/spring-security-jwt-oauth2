@@ -55,3 +55,8 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
 //    }
 }
 
+//
+//  OAuth 로그인으로 회원가입 & 로그인을 성공하면 서버는 FE 에게 AccessToken & RefreshToken 을 내려주죠.
+//   1. FE 에서 어떤 방식으로든 추가정보를 입력받는 화면으로 보내줘야함.
+//      - 로그인 성공했을 때 응답에 isEnabled 필드를 추가해 이 값이 false 면 FE 에서 추가정보를 입력받는 화면으로 보내줘.
+//   2. 확인버튼을 누르면 추가정보가 저장되는 API 호출.

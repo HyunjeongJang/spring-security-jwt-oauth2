@@ -24,7 +24,7 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
 
     // LoginAuthentication before 객체 형태로 넘겨줬는데 파라미터가 authentication 이 가능한 이유 -> Upcasting (자동)
     // 상속 : 부모 - 자식 / 부모가 가진걸 자식이 물려받는다. -> 자식이 부모가 할 수 있는 일을 모두 대체할 수 있다.(부모가 할 수 있는일은 자식이 다 할 수 있음)
-    // 반드시 authentication 을 부모로 가지고 있어야 하는 이유 (그래야 프로다이더의 이 자리로 들어올 수 있음)
+    // 반드시 authentication 을 부모로 가지고 있어야 하는 이유 (그래야 프로바이더의 이 자리로 들어올 수 있음)
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         LoginAuthentication before = (LoginAuthentication) authentication;
@@ -46,7 +46,7 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    public boolean supports(Class<?> authentication) {
+    public boolean supports(Class<?> authentication) { // Provider 가 처리할 수 있는 인증객체를 지정해주는 역할
         return LoginAuthentication.class.isAssignableFrom(authentication);
     }
 }

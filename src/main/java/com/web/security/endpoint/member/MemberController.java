@@ -1,5 +1,6 @@
 package com.web.security.endpoint.member;
 
+import com.web.security.endpoint.member.dto.AdditionalInfoRequest;
 import com.web.security.endpoint.member.dto.RegisterRequest;
 import com.web.security.endpoint.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,15 @@ public class MemberController {
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody RegisterRequest request) {
         memberService.register(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/additional-info")
+    public ResponseEntity<Void> registerAdditionalInfo(
+        @AuthenticationPrincipal long memberId,
+        @RequestBody AdditionalInfoRequest request
+    ) {
+        memberService.registerAdditionalInfo(memberId, request);
         return ResponseEntity.ok().build();
     }
 

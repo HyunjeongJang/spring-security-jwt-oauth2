@@ -96,7 +96,7 @@ public class SecurityConfig {
                 .httpBasic().disable() // HTTP 기반 인증
                 .formLogin().disable()
                 .cors().disable() // CORS -> Origin 문제
-                .csrf().disable() // Rest API 서버는 stateless 하여 서버에 인증 정보를 보관x, jwt 토큰을 Cookie 에 저장하지 않는다면 csrf 공격에 어느 정도 안전하여 disable
+                .csrf().disable() // Rest API 서버는 stateless 하여 서버에 인증 정보를 보관x
                 .headers().frameOptions().disable()
 
                 .and()

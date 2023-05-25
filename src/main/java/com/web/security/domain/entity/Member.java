@@ -1,6 +1,7 @@
 package com.web.security.domain.entity;
 
 import com.web.security.domain.type.MemberRole;
+import com.web.security.endpoint.member.dto.AdditionalInfoRequest;
 import com.web.security.endpoint.member.dto.RegisterRequest;
 import lombok.*;
 import org.springframework.data.domain.AbstractAggregateRoot;
@@ -41,10 +42,13 @@ public class Member extends AbstractAggregateRoot {
                 .build();
     }
 
-    public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
-        return passwordEncoder.matches(password, this.password);
+    public void changeAdditionalInfo(AdditionalInfoRequest request) {
+        this.password = request.getPassword();
+        this.enabled = true;
     }
 
-
+    //    public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
+//        return passwordEncoder.matches(password, this.password);
+//    }
 
 }

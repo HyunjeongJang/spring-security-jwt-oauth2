@@ -18,11 +18,13 @@ public class MyOAuth2User implements OAuth2User {
     private final long memberId;
     private final String accountId;
     private final MemberRole role;
+    private final boolean isEnabled;
 
     public MyOAuth2User (OAuth2Account savedAccount) {
         this.memberId = savedAccount.getMember().getId();
         this.accountId = savedAccount.getAccountId();
         this.role = savedAccount.getMember().getRole();
+        this.isEnabled = savedAccount.getMember().isEnabled();
     }
 
     @Override
