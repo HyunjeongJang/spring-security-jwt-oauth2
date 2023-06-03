@@ -16,10 +16,10 @@ public class ReIssueTokenCommand {
     private MemberRole role;
     private String refreshToken;
 
-    public ReIssueTokenCommand(Authentication auth, ReIssueTokenRequest request) {
-        this.memberId = (Long) auth.getPrincipal();
-        this.role = (MemberRole) auth.getAuthorities().stream().findFirst().get();
-        this.refreshToken = request.getRefreshToken();
-    }
+//    public ReIssueTokenCommand(Authentication auth, ReIssueTokenRequest request) {
+//        this.memberId = (Long) auth.getPrincipal();
+//        this.role = (MemberRole) auth.getAuthorities().stream().findFirst().get();
+//        this.refreshToken = request.getRefreshToken();
+//    }
 
 }

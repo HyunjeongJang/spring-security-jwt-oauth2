@@ -5,7 +5,6 @@ import com.web.security.endpoint.login.dto.LoginAuthentication;
 import com.web.security.endpoint.login.dto.LoginRequest;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -16,7 +15,7 @@ import java.io.IOException;
 
 @Slf4j
 public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    // 사용자의 자격 증명 정보를 인증하는 기본 필터로 사용, AuthenticationEntryPoint로 자격 증명 정보를 요청하고 나면, AbstractAuthenticationProcessingFilter 가 인증 요청을 수행
+    // 사용자의 자격 증명 정보를 인증하는 기본 필터로 사용, AuthenticationEntryPoint 로 자격 증명 정보를 요청하고 나면, AbstractAuthenticationProcessingFilter 가 인증 요청을 수행
 
     public LoginAuthenticationFilter(String defaultFilterProcessesUrl) {
         super(defaultFilterProcessesUrl);
@@ -27,6 +26,12 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
              throws AuthenticationException, IOException {
+
+//        // 요청 메서드 확인
+//        if (!"POST".equals(request.getMethod())) {
+//            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+//        }
+
         // Login 요청이니까 email, password 가 request 의 Body 안에 들어있다고 가정(보통 password 는 RequestBody 에 넣)
         // ObjectMapper (Jackson) : JSON > 객체 or 객체 > JSON (Mapping)
         LoginRequest loginRequest = new ObjectMapper().readValue(request.getReader(), LoginRequest.class);
@@ -35,7 +40,7 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
         LoginAuthentication before = LoginAuthentication.beforeOf(loginRequest);
         // loginRequest 객체는 POJO 형태인데 spring security 에 의존적인 Authentication 객체가 필요하므로 LoginAuthentication 에서 해당 형태로 만들어줌
 
-        //사용자가 준 정보로 인증 전 객체를 만들었고 그 객체를 인증할 수 있는 프로바이더에게 인증요청을 보내야 함 (AuthenticationManager 에게 부탁)
+        // 사용자가 준 정보로 인증 전 객체를 만들었고 그 객체를 인증할 수 있는 프로바이더에게 인증요청을 보내야 함 (AuthenticationManager 에게 부탁)
 
 //        AuthenticationManager authenticationManager = super.getAuthenticationManager();
         return super.getAuthenticationManager().authenticate(before);
@@ -56,7 +61,7 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
 }
 
 //
-//  OAuth 로그인으로 회원가입 & 로그인을 성공하면 서버는 FE 에게 AccessToken & RefreshToken 을 내려주죠.
+//  OAuth 로그인으로 회원가입 & 로그인을 성공하면 서버는 FE 에게 AccessToken & RefreshToken 을 내려줌.
 //   1. FE 에서 어떤 방식으로든 추가정보를 입력받는 화면으로 보내줘야함.
 //      - 로그인 성공했을 때 응답에 isEnabled 필드를 추가해 이 값이 false 면 FE 에서 추가정보를 입력받는 화면으로 보내줘.
 //   2. 확인버튼을 누르면 추가정보가 저장되는 API 호출.

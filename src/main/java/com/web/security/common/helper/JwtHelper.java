@@ -12,8 +12,8 @@ import java.util.Date;
 @Component
 public class JwtHelper {
 
-    private static final int ACCESS_TOKEN_VALIDITY = 30 * 60 * 1000;
-    private static final int REFRESH_TOKEN_VALIDITY = 24 * 60 * 60 * 1000;
+    private static final int ACCESS_TOKEN_VALIDITY = 60 * 1000; // 30* 60 * 1000 -> 30분
+    private static final int REFRESH_TOKEN_VALIDITY = 24 * 60 * 60 * 1000; // 하루
 
     // 시크릿 키는 VERIFY SIGNATURE 를 암호화 하기 위해 쓰임
     // jwt secretKey 내가 만들어준 키로 토큰이 맞는지 검증 할 수 있음, 토큰은 인코딩 개념, 양방향 암호화가 아님

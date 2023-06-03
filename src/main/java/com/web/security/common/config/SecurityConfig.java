@@ -37,7 +37,7 @@ public class SecurityConfig {
     // 예외로 처리해줘야 할 것들 -> 토큰인증 없이 호출할 수 있어야 할 url 지정
     private static final List<String> JWT_AUTH_WHITELIST_SWAGGER = List.of("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
             "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/webjars/**", "/swagger/**");
-    private static final List<String> JWT_AUTH_WHITELIST_DEFAULT = List.of("/member/register", "/error", "/login", "/oauth2/**");
+    private static final List<String> JWT_AUTH_WHITELIST_DEFAULT = List.of("/member/register", "/error", "/login", "/oauth2/**", "/jwt/auth/access-token");
 
     private final MyOAuth2UserService oAuth2UserService;
     private final LoginSuccessHandler loginSuccessHandler;

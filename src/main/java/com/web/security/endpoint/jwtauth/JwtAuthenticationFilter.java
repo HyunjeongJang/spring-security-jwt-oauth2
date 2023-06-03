@@ -2,6 +2,7 @@ package com.web.security.endpoint.jwtauth;
 
 import com.web.security.security.exception.NotFoundAccessTokenException;
 import com.web.security.endpoint.jwtauth.dto.JwtAuthentication;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
@@ -44,6 +45,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
         // 인증 객체를 만듦
         JwtAuthentication before = JwtAuthentication.beforeOf(accessToken); // 인증객체에 accessToken 을 담아서
+        AuthenticationManager manager = super.getAuthenticationManager();
         return super.getAuthenticationManager().authenticate(before); // Authentication(인증 전 객체) 객체를 넘겨서 AuthenticationManager 를 통해 인증 요청을 보냄
         // AuthenticationManager 는 인증할 수 있는 Provider 를 찾아서 위임
     }
@@ -60,6 +62,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         SecurityContextHolder.clearContext(); // SecurityContextHolder 에 객체를 넣어서
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(afterOf);
+        // SecurityContext 에 로그인 성공한 afterOf Token 을 넣어둠, 어디서든 꺼낼 수 있음(role 이 들어있음)
         SecurityContextHolder.setContext(context);
 
         chain.doFilter(request, response); // 성공했으면 끝이 아니라 통과이기 때문에 doFilter , 통과하면 컨트롤러로, 실패하면 AuthenticationFailureEntryPoint 로
