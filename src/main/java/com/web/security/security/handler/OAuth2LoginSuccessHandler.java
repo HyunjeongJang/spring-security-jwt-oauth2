@@ -32,7 +32,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtHelper.generateAccessToken(subject, user.getRole().name());
         String refreshToken = jwtHelper.generateRefreshToken(subject);
         refreshTokenRedisService.save(refreshToken);
-        // CSRF -> API 서버일때 꺼도 되는거
 
         LoginResponse loginResponse = new LoginResponse(accessToken, refreshToken, user.isEnabled());
         String body = new ObjectMapper().writeValueAsString(loginResponse);

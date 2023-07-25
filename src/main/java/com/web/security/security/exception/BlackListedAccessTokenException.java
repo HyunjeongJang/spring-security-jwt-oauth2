@@ -10,5 +10,6 @@ public class BlackListedAccessTokenException extends AuthenticationException {
     public BlackListedAccessTokenException(String msg) {
         super(msg);
     }
+
 }
 

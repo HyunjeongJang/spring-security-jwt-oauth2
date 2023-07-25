@@ -22,4 +22,5 @@ public class RegisterRequest {
     public void encryptPassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
     }
+
 }

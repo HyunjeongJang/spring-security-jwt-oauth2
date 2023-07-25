@@ -5,7 +5,6 @@ import com.web.security.endpoint.member.dto.AdditionalInfoRequest;
 import com.web.security.endpoint.member.dto.RegisterRequest;
 import lombok.*;
 import org.springframework.data.domain.AbstractAggregateRoot;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
@@ -21,9 +20,7 @@ public class Member extends AbstractAggregateRoot {
     private Long id;
 
     private String email;
-
     private String password;
-
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -46,9 +43,5 @@ public class Member extends AbstractAggregateRoot {
         this.password = request.getPassword();
         this.enabled = true;
     }
-
-    //    public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
-//        return passwordEncoder.matches(password, this.password);
-//    }
 
 }

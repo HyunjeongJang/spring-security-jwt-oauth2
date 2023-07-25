@@ -19,7 +19,7 @@ public class FilterSkipMatcher implements RequestMatcher {
     }
 
     @Override
-    public boolean matches(HttpServletRequest request) { // 요청이 왔을 때 skipPaths 에 해당되는게 있는지 없는지 판단해서 boolean 내려주고 필터를 타게 할지말지 판단
+    public boolean matches(HttpServletRequest request) {
         return !matcher.matches(request);
     }
 

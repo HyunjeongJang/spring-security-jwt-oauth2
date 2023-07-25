@@ -26,8 +26,8 @@ public class MemberController {
 
     @PutMapping("/additional-info")
     public ResponseEntity<Void> registerAdditionalInfo(
-        @AuthenticationPrincipal long memberId,
-        @RequestBody AdditionalInfoRequest request
+            @AuthenticationPrincipal long memberId,
+            @RequestBody AdditionalInfoRequest request
     ) {
         memberService.registerAdditionalInfo(memberId, request);
         return ResponseEntity.ok().build();
@@ -35,8 +35,8 @@ public class MemberController {
 
     @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(
-            @RequestHeader(name = "Authorization") String authorization,
-            @AuthenticationPrincipal long memberId
+        @RequestHeader(name = "Authorization") String authorization,
+        @AuthenticationPrincipal long memberId
     ) {
         String accessToken = authorization.substring(AUTHORIZATION_HEADER_PREFIX.length());
         memberService.logout(memberId, accessToken);
@@ -45,8 +45,8 @@ public class MemberController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<Void> delete(
-            @RequestHeader(name = "Authorization") String authorization,
-            @AuthenticationPrincipal long memberId
+        @RequestHeader(name = "Authorization") String authorization,
+        @AuthenticationPrincipal long memberId
     ) {
         String accessToken = authorization.substring(AUTHORIZATION_HEADER_PREFIX.length());
         memberService.delete(memberId, accessToken);

@@ -15,4 +15,5 @@ public class EmailDuplicationException extends BusinessException{
         super(message);
         this.errorCode = errorCode;
     }
+
 }

@@ -20,4 +20,5 @@ public class MemberSecurityService implements UserDetailsService {
                 .map(MemberSecurityEntity::new)
                 .orElseThrow(EmailNotFoundException::new);
     }
+
 }

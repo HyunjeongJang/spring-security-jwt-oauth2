@@ -27,30 +27,21 @@ public class MyOAuth2UserService implements OAuth2UserService<OAuth2UserRequest,
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        // 1. AccessToken 이 발급되어서 넘어요면, 그걸로 사용자 정보 조회
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> userService = new DefaultOAuth2UserService();
-        OAuth2User user = userService.loadUser(userRequest); // 이 시점에 토큰인증, 로그인 처리 다 한다음의 user 가 나옴
 
-        // 2. 읽어온 사용자 정보로 현재 서비스에서 사용 가능한 Entity 를 만들어야 함 -> OAuth2Account
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> userService = new DefaultOAuth2UserService();
+        OAuth2User user = userService.loadUser(userRequest);
         OAuth2Account oAuth2Account = OAuth2Account.of(userRequest, user);
 
-        // 3. 아직 가입되어 있지 않은 사용자라면 회원가입 시킴 -> Member 테이블에 정보를 넣기
         if(!memberRepository.existsByEmail(oAuth2Account.getEmail())) {
-            // 가입이 되어있지 않으면, 가입을 시키고 가입시킨 사용자 정보를 조회해서 OAuth2Account 에 Member 를 채워서 저장
             memberService.register(RegisterRequest.from(oAuth2Account));
         }
-        // 이미 가입 되어있으면 가입된 사용자 정보 조회 (OAuth2Account 에 Member 를 채워서 저장)
         Member member = memberRepository.getByEmail(oAuth2Account.getEmail());
         oAuth2Account.setMember(member);
         if (!oAuth2AccountRepository.existsByProviderNameAndAccountId(oAuth2Account.getProviderName(), oAuth2Account.getAccountId())) {
             oAuth2AccountRepository.save(oAuth2Account);
         }
-
-        // 4. OAuth2User 반환
-        // -> Authentication 객체의 Principal 필드로 저장돼서 SuccessHandler 로 감
         return new MyOAuth2User(oAuth2Account);
     }
+
 }
 
-// Client <--------> Server <------------> KAKAO
-//   (JWT 토큰 인증방식) (JWT 토큰 인증방식)

@@ -26,4 +26,5 @@ public class RefreshTokenRedisRepository {
     public void delete(String key) {
         redisTemplate.opsForValue().getAndDelete(KEY_PREFIX + key);
     }
+
 }

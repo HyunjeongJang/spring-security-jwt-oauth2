@@ -71,4 +71,5 @@ public class MemberSecurityEntity implements UserDetails {
             throw new InvalidPasswordException();
         }
     }
+
 }

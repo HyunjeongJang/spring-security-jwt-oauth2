@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {  // POJO (Plain ~ JAVA Object) 아무것도 영향받지 않는 순수한 자바 객체
-
+public class LoginRequest {
     private String email;
     private String password;
 }

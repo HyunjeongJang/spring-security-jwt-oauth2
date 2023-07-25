@@ -16,4 +16,5 @@ public class AdditionalInfoRequest {
 	public void encryptPassword(PasswordEncoder passwordEncoder) {
 		this.password = passwordEncoder.encode(password);
 	}
+
 }

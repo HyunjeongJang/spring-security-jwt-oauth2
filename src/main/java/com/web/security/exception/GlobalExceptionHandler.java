@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@RestControllerAdvice // 예외처리 & 객체리턴
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailDuplicationException.class)
@@ -28,4 +28,5 @@ public class GlobalExceptionHandler {
         log.error(ex.getMessage(), ex);
         return ResponseEntity.internalServerError().body(ErrorResponse.from(ErrorCode.INTERNAL_SERVER_ERROR));
     }
+
 }

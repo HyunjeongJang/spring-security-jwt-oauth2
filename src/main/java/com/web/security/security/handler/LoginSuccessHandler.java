@@ -3,6 +3,7 @@ package com.web.security.security.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.security.endpoint.login.dto.LoginAuthentication;
 import com.web.security.endpoint.login.dto.LoginResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;

@@ -8,13 +8,10 @@ import com.web.security.domain.repository.RefreshTokenRedisRepository;
 import com.web.security.endpoint.member.dto.AdditionalInfoRequest;
 import com.web.security.endpoint.member.dto.RegisterRequest;
 import com.web.security.exception.EmailDuplicationException;
-import com.web.security.security.exception.EmailNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -37,9 +34,6 @@ public class MemberService {
         Member member = Member.of(request);
         memberRepository.save(member);
     }
-
-    // Cookie 에 저장하는 방법
-    // Memory 에 저장하는 방법 (Redux)
 
     @Transactional
     public void registerAdditionalInfo(long memberId, AdditionalInfoRequest request) {

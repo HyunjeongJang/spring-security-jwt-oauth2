@@ -25,4 +25,5 @@ public class MemberResponse {
                 member.getNickname(),
                 member.getRole());
     }
+
 }

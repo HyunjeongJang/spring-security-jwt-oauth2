@@ -15,4 +15,5 @@ public class NotFoundAccessTokenException extends AuthenticationException {
     public NotFoundAccessTokenException(String msg) {
         super(msg);
     }
+
 }

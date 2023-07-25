@@ -10,7 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 import java.util.List;
 
-// 인증객체는 인증되기 전, 인증된 후 두 가지 상태를 가짐
 public class LoginAuthentication extends UsernamePasswordAuthenticationToken {
 
     public LoginAuthentication(Object principal, Object credentials) {
@@ -52,4 +51,5 @@ public class LoginAuthentication extends UsernamePasswordAuthenticationToken {
         private String accessToken;
         private String refreshToken;
     }
+
 }

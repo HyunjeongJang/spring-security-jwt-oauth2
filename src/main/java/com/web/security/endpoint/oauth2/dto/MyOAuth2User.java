@@ -2,7 +2,6 @@ package com.web.security.endpoint.oauth2.dto;
 
 import com.web.security.domain.entity.OAuth2Account;
 import com.web.security.domain.type.MemberRole;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -45,4 +44,5 @@ public class MyOAuth2User implements OAuth2User {
     public long getMemberId() {
         return this.memberId;
     }
+
 }

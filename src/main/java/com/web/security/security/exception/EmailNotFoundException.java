@@ -15,4 +15,5 @@ public class EmailNotFoundException extends AuthenticationException {
     public EmailNotFoundException(String msg) {
         super(msg);
     }
+
 }

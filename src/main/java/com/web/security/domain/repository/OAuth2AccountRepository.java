@@ -8,11 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface OAuth2AccountRepository extends CrudRepository<OAuth2Account, Long> {
+
     boolean existsByProviderNameAndAccountId(String providerName, String accountId);
 
     OAuth2Account findByProviderNameAndAccountId(String providerName, String accountId);
 
-    @Modifying // Spring Data 의 규칙 -> 데이터가 수정되는 쿼리라는 걸 알려주는 용도
+    @Modifying
     @Transactional
     void deleteAllByMemberId(long memberId);
+
 }

@@ -15,4 +15,5 @@ public class InvalidPasswordException extends AuthenticationException {
     public InvalidPasswordException(String msg) {
         super(msg);
     }
+
 }

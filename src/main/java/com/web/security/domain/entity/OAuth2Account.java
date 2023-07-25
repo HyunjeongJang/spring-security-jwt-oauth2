@@ -32,28 +32,24 @@ public class OAuth2Account {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Transient // 컬럼으로 인식하지 않고 단순 데이터를 담기위한 목적
+    @Transient
     private String email;
 
     @Transient
     private String nickname;
 
     public static OAuth2Account of(OAuth2UserRequest request, OAuth2User user) {
-        String registrationId = request.getClientRegistration().getRegistrationId(); // kakao (yml - registration 부분)
+        String registrationId = request.getClientRegistration().getRegistrationId();
         String attributeName = request.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
         OAuth2Account oAuth2Account = null;
         if(registrationId.equals("kakao")) {
             oAuth2Account = OAuth2Account.ofKakao(user, registrationId, attributeName);
         }
-//        else if (registrationId.equals("naver")) {
-//            oAuth2Account = OAuth2Account.ofKakao(user, registrationId, attributeName);
-//        }
         return oAuth2Account;
     }
 
     public static OAuth2Account ofKakao(OAuth2User user, String registrationId, String attributeName) {
-        // user: kakao 에서 내려온 사용자 정보
         Map<String, Object> attributes = user.getAttributes();
 
         Map<String, Object> profile = (Map<String, Object>) attributes.get("properties");
@@ -73,4 +69,5 @@ public class OAuth2Account {
     public void setMember(Member member) {
         this.member = member;
     }
+
 }

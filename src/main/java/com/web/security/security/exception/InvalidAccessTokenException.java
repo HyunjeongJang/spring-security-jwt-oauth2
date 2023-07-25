@@ -11,6 +11,7 @@ public class InvalidAccessTokenException extends AuthenticationException {
     public InvalidAccessTokenException(Throwable cause) { // 에러는 중첩이 될 수 있음
         this("잘못된 AccessToken 입니다..");
     }
+
     public InvalidAccessTokenException(String msg, Throwable cause) {
         super(msg, cause);
     }
@@ -18,4 +19,5 @@ public class InvalidAccessTokenException extends AuthenticationException {
     public InvalidAccessTokenException(String msg) {
         super(msg);
     }
+
 }
