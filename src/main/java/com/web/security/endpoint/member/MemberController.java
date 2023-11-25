@@ -19,7 +19,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<Void> register(
+        @RequestBody RegisterRequest request
+    ) {
         memberService.register(request);
         return ResponseEntity.ok().build();
     }
@@ -35,8 +37,8 @@ public class MemberController {
 
     @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(
-            @RequestHeader(name = "Authorization") String authorization,
-            @AuthenticationPrincipal long memberId
+        @RequestHeader(name = "Authorization") String authorization,
+        @AuthenticationPrincipal long memberId
     ) {
         String accessToken = authorization.substring(AUTHORIZATION_HEADER_PREFIX.length());
         memberService.logout(memberId, accessToken);
@@ -45,8 +47,8 @@ public class MemberController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<Void> delete(
-            @RequestHeader(name = "Authorization") String authorization,
-            @AuthenticationPrincipal long memberId
+        @RequestHeader(name = "Authorization") String authorization,
+        @AuthenticationPrincipal long memberId
     ) {
         String accessToken = authorization.substring(AUTHORIZATION_HEADER_PREFIX.length());
         memberService.delete(memberId, accessToken);

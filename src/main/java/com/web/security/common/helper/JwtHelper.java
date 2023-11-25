@@ -12,7 +12,7 @@ import java.util.Date;
 @Component
 public class JwtHelper {
 
-    private static final int ACCESS_TOKEN_VALIDITY = 60 * 1000; // 30* 60 * 1000 -> 30분
+    private static final int ACCESS_TOKEN_VALIDITY = 60 * 60 * 1000; // 30* 60 * 1000 -> 30분
     private static final int REFRESH_TOKEN_VALIDITY = 24 * 60 * 60 * 1000; // 하루
 
     // 시크릿 키는 VERIFY SIGNATURE 를 암호화 하기 위해 쓰임

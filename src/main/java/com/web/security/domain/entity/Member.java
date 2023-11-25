@@ -47,7 +47,7 @@ public class Member extends AbstractAggregateRoot {
         this.enabled = true;
     }
 
-    //    public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
+//    public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
 //        return passwordEncoder.matches(password, this.password);
 //    }
 

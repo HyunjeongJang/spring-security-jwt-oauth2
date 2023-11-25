@@ -27,7 +27,7 @@ public class MyOAuth2UserService implements OAuth2UserService<OAuth2UserRequest,
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        // 1. AccessToken 이 발급되어서 넘어요면, 그걸로 사용자 정보 조회
+        // 1. AccessToken 이 발급되어서 넘어오면, 그걸로 사용자 정보 조회
         OAuth2UserService<OAuth2UserRequest, OAuth2User> userService = new DefaultOAuth2UserService();
         OAuth2User user = userService.loadUser(userRequest); // 이 시점에 토큰인증, 로그인 처리 다 한다음의 user 가 나옴
 
@@ -50,7 +50,5 @@ public class MyOAuth2UserService implements OAuth2UserService<OAuth2UserRequest,
         // -> Authentication 객체의 Principal 필드로 저장돼서 SuccessHandler 로 감
         return new MyOAuth2User(oAuth2Account);
     }
-}
 
-// Client <--------> Server <------------> KAKAO
-//   (JWT 토큰 인증방식) (JWT 토큰 인증방식)
+}

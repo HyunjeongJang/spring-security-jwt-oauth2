@@ -73,4 +73,5 @@ public class OAuth2Account {
     public void setMember(Member member) {
         this.member = member;
     }
+
 }
