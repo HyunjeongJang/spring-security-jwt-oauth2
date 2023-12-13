@@ -1,4 +1,4 @@
-# spring-security-jwt-oauth2
+# spring-security-jwt-oauth2 ver.01
 <!--
 ## 스프링 시큐리티 흐름
 <image src="https://github.com/HyunjeongJang/spring-security-jwt-oauth2/assets/113197284/3226523a-713d-4872-acc6-9579dca210e7" width="800">
